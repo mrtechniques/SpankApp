@@ -30,6 +30,11 @@ jobs:
           java-version: 17
           distribution: temurin
 
+      - name: Set Android SDK compile version
+        run: |
+          sed -i 's/compileSdkVersion = 33/compileSdkVersion = 34/' android/build.gradle || true
+          sed -i 's/targetSdkVersion = 33/targetSdkVersion = 34/' android/build.gradle || true
+
       # 4. Set up Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
@@ -72,10 +77,15 @@ jobs:
           restore-keys: gradle-
 
       # 9. Build the debug APK
+      - name: Set Kotlin version
+        run: |
+          sed -i 's/kotlinVersion = "1.8.0"/kotlinVersion = "1.7.22"/' android/build.gradle || true
+          echo "kotlin_version=1.7.22" >> android/gradle.properties
+
       - name: Build debug APK
         run: |
           cd android
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --stacktrace
         env:
           ANDROID_HOME: ${{ env.ANDROID_HOME }}
 
