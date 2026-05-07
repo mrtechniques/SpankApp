@@ -39,18 +39,23 @@ jobs:
         run: npm install
 
       # 6. Generate a debug keystore (for unsigned/debug APK — no secrets needed)
+       # 6. Generate a debug keystore (skip if already exists)
       - name: Generate debug keystore
         run: |
           mkdir -p android/app
-          keytool -genkeypair -v \
-            -storetype PKCS12 \
-            -keystore android/app/debug.keystore \
-            -alias androiddebugkey \
-            -keyalg RSA -keysize 2048 \
-            -validity 10000 \
-            -storepass android \
-            -keypass android \
-            -dname "CN=Android Debug, O=Android, C=US"
+          if [ ! -f android/app/debug.keystore ]; then
+            keytool -genkeypair -v \
+              -storetype PKCS12 \
+              -keystore android/app/debug.keystore \
+              -alias androiddebugkey \
+              -keyalg RSA -keysize 2048 \
+              -validity 10000 \
+              -storepass android \
+              -keypass android \
+              -dname "CN=Android Debug, O=Android, C=US"
+          else
+            echo "Keystore already exists, skipping."
+          fi
 
       # 7. Make gradlew executable
       - name: Make Gradlew executable
