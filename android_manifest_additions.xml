@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AndroidManifest.xml additions for SpankApp.
+  Merge these permissions and service declarations into your
+  android/app/src/main/AndroidManifest.xml
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <!-- Accelerometer access -->
+  <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+
+  <!-- Foreground service — required for background-actions to keep running when screen is locked -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+
+  <!-- Wake lock — prevent CPU sleeping while listening -->
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+  <!-- Read external storage — for custom MP3 files (Android < 13) -->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    android:maxSdkVersion="32" />
+
+  <!-- Android 13+ granular media permissions -->
+  <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
+  <!-- Vibrate — optional, for haptic feedback on hit -->
+  <uses-permission android:name="android.permission.VIBRATE" />
+
+  <application>
+    <!-- Foreground service declaration for react-native-background-actions -->
+    <service
+      android:name="com.asterinet.reaction.bgTask.RNBackgroundActionsTask"
+      android:foregroundServiceType="mediaPlayback"
+      android:exported="false" />
+  </application>
+
+</manifest>
+
+<!--
+  iOS: Add the following to ios/SpankApp/Info.plist:
+
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>audio</string>
+    <string>fetch</string>
+    <string>processing</string>
+  </array>
+
+  <key>NSMotionUsageDescription</key>
+  <string>Spank uses the accelerometer to detect when you tap your phone.</string>
+
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Spank does not use the microphone.</string>
+-->
